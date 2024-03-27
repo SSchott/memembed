@@ -138,6 +138,8 @@ int PDB::parse_pdb(string& in, string& top_chain, vector<int>& skip_residues){
 						c++;
 					}
 				}			
+			}else if(strncmp(line.substr(0,3).c_str(),"TER",3) == 0){
+				all_atoms.push_back(line);
 			}			
 		}
 	}else{
@@ -165,7 +167,10 @@ void PDB::write_pdb(double energy){
 	double max_x = -1000000.0, max_y = -1000000.0, min_x = 1000000.0, min_y = 1000000.0;
 
 	BOOST_FOREACH(string a, all_atoms){
-
+		if(strncmp(a.substr(0,3).c_str(),"TER",3) == 0){
+			outfile << a;
+			continue;
+		}
  		int tag = 0;
 		if(!chains.size() || output_all_chains){
 			tag = 1;
